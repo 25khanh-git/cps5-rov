@@ -1,0 +1,9 @@
+# Tham số bổ sung cho MAVROS (nạp SAU apm_pluginlists.yaml và apm_config.yaml của MAVROS).
+# fcu_url được truyền từ launch (sim: UDP từ SITL; thật: USB/serial tới Pixhawk 6C).
+
+# Node "mavros" (UAS) — QUAN TRỌNG:
+# ArduSub chỉ chấp nhận RC override / heartbeat GCS từ system id = MAV_GCS_SYSID (mặc định 255).
+# MAVROS mặc định dùng system id 1 => lệnh lái bị bỏ qua mà không báo lỗi.
+/mavros:
+  ros__parameters:
+    system_id: 255

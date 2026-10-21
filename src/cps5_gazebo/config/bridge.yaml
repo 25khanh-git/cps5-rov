@@ -1,0 +1,21 @@
+# ros_gz_bridge: các topic Gazebo -> ROS 2 cần cho simulation.
+# (Lệnh thruster KHÔNG đi qua ROS: ArduSub SITL <-> ArduPilotPlugin nói chuyện trực tiếp.)
+
+- ros_topic_name: /camera/image_raw
+  gz_topic_name: /cps5/camera/image
+  ros_type_name: sensor_msgs/msg/Image
+  gz_type_name: gz.msgs.Image
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /camera/camera_info
+  gz_topic_name: /cps5/camera/camera_info
+  ros_type_name: sensor_msgs/msg/CameraInfo
+  gz_type_name: gz.msgs.CameraInfo
+  direction: GZ_TO_ROS
+
+# Vị trí thật của robot trong Gazebo (chỉ có trong sim) — dùng cho check_sim.
+- ros_topic_name: /cps5/ground_truth/odom
+  gz_topic_name: /model/cps5/odometry
+  ros_type_name: nav_msgs/msg/Odometry
+  gz_type_name: gz.msgs.Odometry
+  direction: GZ_TO_ROS

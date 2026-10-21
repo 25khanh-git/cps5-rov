@@ -1,0 +1,31 @@
+# =============================================================================
+# Tham số ArduSub cho CPS 5 — DÙNG CHUNG cho SITL và Pixhawk 6C.
+# Kiểm tra với ArduSub Sub-4.7.2. Nạp vào Pixhawk thật bằng QGroundControl
+# (Parameters -> Tools -> Load from file), rồi khởi động lại Pixhawk.
+# Định dạng: TÊN  GIÁ_TRỊ   (dòng bắt đầu bằng # là chú thích)
+# =============================================================================
+
+# Khung SimpleROV-5: 2 ngang (tiến + xoay), 2 đứng (lặn + roll), 1 ngang hông.
+# 0:BlueROV1 1:Vectored 2:Vectored_6DOF 3:Vectored_6DOF_90 4:SimpleROV-3 5:SimpleROV-4 6:SimpleROV-5
+FRAME_CONFIG     6
+
+# Mất tín hiệu điều khiển (RC override / MANUAL_CONTROL) quá FS_PILOT_TIMEOUT giây
+# -> 2: đưa về trung tính và DISARM (robot nổi dương nên tự nổi lên).
+FS_PILOT_INPUT   2
+FS_PILOT_TIMEOUT 1.5
+
+# Mất heartbeat của GCS (MAVROS, system id 255) -> 2: disarm.
+FS_GCS_ENABLE    2
+
+# Rò rỉ nước: BOM không có cảm biến rò rỉ -> chỉ cảnh báo.
+FS_LEAK_ENABLE   1
+
+# Pin 3S2P Li-ion (6x18650). Thấp -> cảnh báo; nguy hiểm -> SURFACE (nổi lên).
+# Failsafe action của ArduSub: 0 none, 1 warn, 2 disarm, 3 surface.
+BATT_LOW_VOLT    10.5
+BATT_CRT_VOLT    9.9
+BATT_FS_LOW_ACT  1
+BATT_FS_CRT_ACT  3
+
+# Độ sâu (cm, âm) được coi là "đã ở mặt nước" cho chế độ SURFACE / ALT_HOLD.
+SURFACE_DEPTH    -10

@@ -1,0 +1,11 @@
+safety_node:
+  ros__parameters:
+    # Mất heartbeat từ máy điều khiển (teleop_node) quá lâu khi đang ARM -> disarm.
+    heartbeat_timeout: 3.0        # s
+    # Pin 3S Li-ion: dưới warn -> cảnh báo; dưới critical liên tục critical_hold giây -> SURFACE.
+    battery_warn: 10.5            # V
+    battery_critical: 9.9         # V
+    critical_hold: 3.0            # s
+    # Sâu hơn mức này -> chuyển SURFACE.
+    max_depth: 5.0                # m
+    check_rate: 5.0               # Hz

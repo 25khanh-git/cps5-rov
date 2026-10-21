@@ -1,0 +1,5 @@
+# Mọi file văn bản dùng LF — script bash với CRLF sẽ lỗi trong WSL.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.stl binary

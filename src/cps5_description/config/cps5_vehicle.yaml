@@ -1,0 +1,92 @@
+# =============================================================================
+# CPS 5 — TOÀN BỘ THÔNG SỐ VẬT LÝ CỦA ROBOT (đơn vị SI: m, kg, N, s, rad)
+#
+# Đây là file DUY NHẤT bạn cần sửa khi có số đo thật.
+# Sau khi sửa: chạy lại simulation (file SDF được sinh lại tự động mỗi lần chạy).
+# Xem nhanh các con số suy ra (thể tích, lực nổi...):  bash scripts/generate_sdf.sh
+#
+# Hệ trục của model (giống Gazebo / ROS REP-103): x = tiến, y = trái, z = lên.
+# Gốc tọa độ base_link = tâm của hộp nổi (tâm nổi).
+# =============================================================================
+
+vehicle:
+  name: cps5
+  # Tổng khối lượng (kg) — ước lượng từ BOM ~2.1 kg. CÂN THẬT RỒI SỬA.
+  mass: 2.10
+  # Lực nổi lớn hơn trọng lượng bao nhiêu phần (0.015 = 1.5 %).
+  # Dương => robot tự nổi khi thả tay (an toàn). Âm => robot chìm.
+  buoyancy_margin: 0.015
+  # Tâm nổi cao hơn trọng tâm (m). Càng lớn robot càng tự cân bằng roll/pitch tốt.
+  cob_above_com: 0.015
+  # Mô-men quán tính quanh trọng tâm (kg·m²) — xấp xỉ hình trụ r≈6 cm, dài≈35 cm.
+  inertia: {ixx: 0.0040, iyy: 0.0233, izz: 0.0233}
+  # Vị trí thả robot trong thế giới (z = 0 là mặt nước, âm là dưới nước).
+  # Thả sát mặt nước để ArduSub hiệu chuẩn cảm biến độ sâu ở mức ~0 m khi khởi động.
+  spawn: {x: 0.0, y: 0.0, z: -0.05, yaw: 0.0}
+
+water:
+  # Nước ngọt ~997 kg/m³; nước biển ~1025 kg/m³.
+  density: 997.0
+
+# Hộp va chạm dùng để TÍNH LỰC NỔI. Plugin Buoyancy của Gazebo tính lực nổi theo
+# thể tích collision, nên chiều cao hộp được sinh tự động sao cho:
+#   thể tích = mass * (1 + buoyancy_margin) / density
+hull:
+  length: 0.30   # m, theo trục x
+  width: 0.12    # m, theo trục y
+
+# Chỉ dùng để hiển thị (không ảnh hưởng vật lý).
+visual:
+  tube_radius: 0.040    # ống acrylic 80 mm
+  tube_length: 0.25     # dài 250 mm
+
+# Khối lượng nước kèm (added mass), kg và kg·m², giá trị DƯƠNG.
+# Khai báo bằng <fluid_added_mass> của SDF (ổn định số với DART trên Gazebo Harmonic).
+# Ước lượng: trụ dài -> theo y,z ≈ ρ·π·r²·L ≈ 1.9 kg; theo x ≈ 10 % khối lượng chiếm chỗ.
+added_mass:
+  enabled: true
+  xx: 0.20
+  yy: 1.90
+  zz: 1.90
+  pp: 0.001
+  qq: 0.015
+  rr: 0.015
+
+# Hệ số cản thủy động (Fossen), giá trị ÂM. Lực cản = linear*v + quadratic*v*|v|.
+# Bậc hai ≈ -0.5·ρ·Cd·A. Đây là ước lượng — chỉnh lại bằng dữ liệu ros2 bag ở bể bơi.
+drag:
+  linear:    {x: -1.0, y: -2.0, z: -2.0, k: -0.05, m: -0.10, n: -0.10}
+  quadratic: {x: -5.0, y: -15.0, z: -24.0, k: -0.02, m: -0.10, n: -0.10}
+
+thrusters:
+  # Lực đẩy tối đa mỗi thruster (N) ở PWM 1100 / 1900. CHƯA ĐO — đo bằng cân treo.
+  max_thrust: 5.0
+  propeller_diameter: 0.07   # m (chỉ để tính tốc độ quay cánh)
+  thrust_coefficient: 0.02   # chỉ để tính tốc độ quay cánh
+  prop_mass: 0.005           # kg mỗi cánh (được trừ ra khỏi khối lượng thân)
+  # THỨ TỰ DANH SÁCH = SERVO1..5 của ArduSub, frame SimpleROV-5 (FRAME_CONFIG = 6).
+  # Kiểm tra từ source ArduSub (AP_Motors6DOF.cpp, Sub-4.7.2):
+  #   M1: yaw -1, forward +1  -> thruster ngang bên PHẢI
+  #   M2: yaw +1, forward +1  -> thruster ngang bên TRÁI
+  #   M3: roll +1, throttle -1 -> thruster đứng bên PHẢI (PWM dương đẩy XUỐNG)
+  #   M4: roll -1, throttle -1 -> thruster đứng bên TRÁI (PWM dương đẩy XUỐNG)
+  #   M5: lateral +1          -> thruster ngang hông (PWM dương đẩy sang PHẢI)
+  # axis = hướng lực khi PWM > 1500, trong hệ trục model (x tiến, y trái, z lên).
+  # spin = chiều quay cánh (±1), chỉ để cân mô-men phản lực giữa các cánh.
+  list:
+    - {name: thruster1, xyz: [-0.12, -0.08, -0.015], axis: [1, 0, 0],  spin: 1}
+    - {name: thruster2, xyz: [-0.12,  0.08, -0.015], axis: [1, 0, 0],  spin: -1}
+    - {name: thruster3, xyz: [ 0.00, -0.09,  0.000], axis: [0, 0, -1], spin: 1}
+    - {name: thruster4, xyz: [ 0.00,  0.09,  0.000], axis: [0, 0, -1], spin: -1}
+    - {name: thruster5, xyz: [ 0.00,  0.00, -0.015], axis: [0, -1, 0], spin: 1}
+
+camera:
+  enabled: true
+  xyz: [0.16, 0.0, 0.0]   # sau vòm acrylic phía trước
+  hfov: 1.57              # rad (~90°)
+  width: 640
+  height: 480
+  rate: 15                # Hz
+
+imu:
+  rate: 1000              # Hz — ArduPilotPlugin đọc IMU này để gửi cho SITL

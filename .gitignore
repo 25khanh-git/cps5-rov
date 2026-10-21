@@ -1,0 +1,11 @@
+# colcon (nếu lỡ build trong thư mục dự án)
+build/
+install/
+log/
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+# SDF sinh tự động (nằm ở ~/.cps5/generated, phòng khi ghi vào đây)
+generated/

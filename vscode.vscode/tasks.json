@@ -1,0 +1,277 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CPS5: 1. Cài môi trường (setup_wsl)",
+      "detail": "Chạy một lần: ROS 2, Gazebo, ArduSub SITL, plugin",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/setup_wsl.sh"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/setup_wsl.sh"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "CPS5: 2. Build",
+      "detail": "colcon build (Ctrl+Shift+B)",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/build.sh"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/build.sh"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "shared",
+        "clear": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "CPS5: 3. Chạy simulation",
+      "detail": "Gazebo + ArduSub SITL + MAVROS + teleop",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/run_sim.sh"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/run_sim.sh"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "CPS5: 3b. Chạy simulation (không cửa sổ)",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/run_sim.sh",
+        "gui:=false"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/run_sim.sh",
+          "gui:=false"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "CPS5: 3c. Chạy simulation (render ogre — nếu ogre2 lỗi)",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/run_sim.sh",
+        "render_engine:=ogre"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/run_sim.sh",
+          "render_engine:=ogre"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "CPS5: 4. Lái bằng bàn phím",
+      "detail": "Chạy khi simulation đang chạy",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/keyboard.sh"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/keyboard.sh"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "CPS5: 5. Tự kiểm tra simulation",
+      "detail": "9 mốc nghiệm thu",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/check_sim.sh"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/check_sim.sh"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "shared",
+        "clear": true
+      },
+      "group": "test"
+    },
+    {
+      "label": "CPS5: Unit test",
+      "detail": "Không cần ROS",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/test.sh"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/test.sh"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "shared",
+        "clear": true
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "CPS5: Xem số liệu vật lý + sinh SDF",
+      "detail": "Sau khi sửa cps5_vehicle.yaml",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-l",
+        "scripts/generate_sdf.sh"
+      ],
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--cd",
+          "${workspaceFolder}",
+          "-e",
+          "bash",
+          "-l",
+          "scripts/generate_sdf.sh"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "shared",
+        "clear": true
+      }
+    }
+  ]
+}

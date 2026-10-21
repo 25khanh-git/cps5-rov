@@ -1,0 +1,53 @@
+{
+  // ---- Bắt buộc: script bash phải dùng xuống dòng LF (CRLF làm WSL báo lỗi "\r") ----
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  // ---- Python / ROS 2 Humble (Python 3.10 trong WSL) ----
+  "python.defaultInterpreterPath": "/usr/bin/python3",
+  "python.analysis.extraPaths": [
+    "/opt/ros/humble/lib/python3.10/site-packages",
+    "/opt/ros/humble/local/lib/python3.10/dist-packages",
+    "${workspaceFolder}/src/cps5_description",
+    "${workspaceFolder}/src/cps5_gazebo",
+    "${workspaceFolder}/src/rov_teleop",
+    "${workspaceFolder}/src/rov_safety",
+    "${workspaceFolder}/src/rov_bringup"
+  ],
+  "python.autoComplete.extraPaths": [
+    "/opt/ros/humble/lib/python3.10/site-packages",
+    "/opt/ros/humble/local/lib/python3.10/dist-packages"
+  ],
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": [
+    "src/cps5_description/test",
+    "src/rov_teleop/test",
+    "src/rov_safety/test",
+    "src/rov_bringup/test"
+  ],
+  "python.envFile": "${workspaceFolder}/.vscode/python.env",
+  "flake8.args": ["--max-line-length=120"],
+  "[python]": { "editor.rulers": [100] },
+
+  // ---- Nhận dạng file ----
+  "files.associations": {
+    "*.parm": "properties",
+    "*.launch.py": "python",
+    "*.sdf": "xml"
+  },
+  "yaml.schemas": {},
+
+  // ---- Ẩn file build/cache ----
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.egg-info": true,
+    "build": true,
+    "install": true,
+    "log": true
+  },
+  "search.exclude": { "build": true, "install": true, "log": true },
+
+  // ---- Terminal mặc định là bash (khi mở bằng Remote - WSL) ----
+  "terminal.integrated.defaultProfile.linux": "bash"
+}
