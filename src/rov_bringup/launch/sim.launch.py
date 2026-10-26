@@ -1,4 +1,4 @@
-"""Chạy TOÀN BỘ simulation trên laptop (WSL2):
+"""Chạy toàn bộ sim trên laptop (WSL2):
 
   Gazebo (bể nước + CPS 5)  <-JSON/UDP 9002->  ArduSub SITL  <-MAVLink/UDP 14550->  MAVROS
   + ros_gz_bridge (camera, ground truth) + safety_node + teleop_node (+ joy_node tuỳ chọn)

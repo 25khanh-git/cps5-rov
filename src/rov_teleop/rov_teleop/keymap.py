@@ -1,7 +1,7 @@
 """Bố cục phím cho keyboard_teleop (logic thuần, không phụ thuộc ROS).
 
-Kiểu "GIỮ PHÍM": giữ phím thì robot chạy, nhả ra thì dừng.
-Terminal không báo sự kiện nhả phím. Nhưng khi GIỮ phím, hệ điều hành tự lặp lại phím
+Kiểu "giữ phím": giữ phím thì robot chạy, nhả ra thì dừng.
+Terminal không báo sự kiện nhả phím. Nhưng khi giữ phím, hệ điều hành tự lặp lại phím
 (~30 lần/giây, sau độ trễ đầu ~0.5 s). Vì vậy một trục coi là "đang giữ" nếu phím của nó
 được nhận trong vòng `release_timeout` giây gần nhất; quá thời gian đó thì về 0.
 """

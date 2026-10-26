@@ -1,13 +1,18 @@
 # =============================================================================
-# Tham số ArduSub cho CPS 5 — DÙNG CHUNG cho SITL và Pixhawk 6C.
+# Tham số ArduSub cho CPS5 — dùng chung cho SITL (sim) và Pixhawk 6C (robot thật).
 # Kiểm tra với ArduSub Sub-4.7.2. Nạp vào Pixhawk thật bằng QGroundControl
 # (Parameters -> Tools -> Load from file), rồi khởi động lại Pixhawk.
 # Định dạng: TÊN  GIÁ_TRỊ   (dòng bắt đầu bằng # là chú thích)
 # =============================================================================
 
-# Khung SimpleROV-5: 2 ngang (tiến + xoay), 2 đứng (lặn + roll), 1 ngang hông.
+# Khung Vectored-6DOF (8 x T200, giống BlueROV2 Heavy): 4 ngang xéo 45° ở 4 góc
+# (M1-M4: tiến, ngang, xoay), 4 đứng (M5-M8: lặn, roll, pitch).
 # 0:BlueROV1 1:Vectored 2:Vectored_6DOF 3:Vectored_6DOF_90 4:SimpleROV-3 5:SimpleROV-4 6:SimpleROV-5
-FRAME_CONFIG     6
+FRAME_CONFIG     2
+
+# Chiều thruster trên robot thật: chạy Motor Test (QGC hoặc BlueOS). Thruster nào đẩy ngược
+# so với bảng ở mục 4 của README thì đặt MOT_n_DIRECTION = -1 (n = 1..8) trên Pixhawk.
+# Không đặt trong file này vì trong SITL mọi thruster luôn đúng chiều (1).
 
 # Mất tín hiệu điều khiển (RC override / MANUAL_CONTROL) quá FS_PILOT_TIMEOUT giây
 # -> 2: đưa về trung tính và DISARM (robot nổi dương nên tự nổi lên).
@@ -17,10 +22,11 @@ FS_PILOT_TIMEOUT 1.5
 # Mất heartbeat của GCS (MAVROS, system id 255) -> 2: disarm.
 FS_GCS_ENABLE    2
 
-# Rò rỉ nước: BOM không có cảm biến rò rỉ -> chỉ cảnh báo.
+# Rò nước: robot chưa có cảm biến rò nước -> chỉ cảnh báo.
 FS_LEAK_ENABLE   1
 
-# Pin 3S2P Li-ion (6x18650). Thấp -> cảnh báo; nguy hiểm -> SURFACE (nổi lên).
+# Pin 3S (~12 V). Thấp -> cảnh báo; nguy hiểm -> SURFACE (tự nổi lên).
+# Giữ khớp với battery_warn / battery_critical trong safety.yaml.
 # Failsafe action của ArduSub: 0 none, 1 warn, 2 disarm, 3 surface.
 BATT_LOW_VOLT    10.5
 BATT_CRT_VOLT    9.9

@@ -1,11 +1,11 @@
-"""chase_camera: camera Gazebo bám đuôi robot, MƯỢT và KHÔNG lắc.
+"""chase_camera: camera của cửa sổ Gazebo bám đuôi robot, chuyển động mượt và không lắc.
 
-Vì sao không dùng "Follow" của Gazebo: Follow xoay camera theo TOÀN BỘ góc nghiêng của
-robot (roll, pitch, yaw), nên robot lắc nhẹ trong nước là camera lắc theo, rất khó nhìn.
+Vì sao không dùng "Follow" của Gazebo: Follow xoay camera theo cả ba góc nghiêng của
+robot (roll, pitch, yaw), nên robot lắc nhẹ trong nước là hình cũng rung theo.
 
 Node này đọc vị trí thật của robot (/cps5/ground_truth/odom), chỉ lấy vị trí + hướng đi
-(yaw, có làm mượt), rồi đặt camera của cửa sổ Gazebo ở phía SAU và hơi CAO so với robot,
-nhìn chéo xuống robot — giống camera game đua xe. Camera không quan tâm roll/pitch.
+(yaw, có làm mượt), rồi đặt camera của cửa sổ Gazebo ở phía sau và hơi cao hơn robot,
+nhìn chéo xuống robot (giống camera trong game đua xe). Camera bỏ qua roll/pitch.
 Xoay vòng quanh robot bằng phím j / l / i / k / c trong keyboard_teleop (topic /chase_camera/orbit).
 
 Gửi lệnh qua dịch vụ /gui/move_to/pose của Gazebo (cần gói apt

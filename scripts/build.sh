@@ -3,7 +3,7 @@
 #   bash scripts/build.sh                 # build tất cả
 #   bash scripts/build.sh --packages-select rov_teleop
 # --symlink-install: sửa file Python / launch / YAML trong VS Code là có hiệu lực ngay,
-# chỉ cần build lại khi THÊM file mới hoặc sửa setup.py / package.xml.
+# chỉ cần build lại khi thêm file mới hoặc sửa setup.py / package.xml.
 set -eo pipefail
 source "$(dirname "$0")/env.sh"
 mkdir -p "$CPS5_WS"

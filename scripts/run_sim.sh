@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Chạy simulation đầy đủ. Tham số thêm được chuyển cho launch, ví dụ:
+# Chạy sim đầy đủ. Tham số thêm được chuyển nguyên cho launch, ví dụ:
 #   bash scripts/run_sim.sh gui:=false
 #   bash scripts/run_sim.sh render_engine:=ogre
 set -eo pipefail

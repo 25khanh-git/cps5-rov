@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# Cài TOÀN BỘ môi trường simulation CPS 5 trong WSL2 Ubuntu 22.04.
+# Cài toàn bộ môi trường sim CPS5 trong WSL2 Ubuntu 22.04.
 #
 #   bash scripts/setup_wsl.sh            # cài tất cả (30–90 phút, cần ~15 GB trống)
 #   bash scripts/setup_wsl.sh ros        # chỉ chạy một bước: base | ros | gazebo | ardupilot | plugin | workspace
@@ -17,7 +17,7 @@
 # =============================================================================
 set -eo pipefail
 
-ARDUSUB_REF="${ARDUSUB_REF:-Sub-4.7.2}"          # PHẢI khớp firmware nạp vào Pixhawk 6C
+ARDUSUB_REF="${ARDUSUB_REF:-Sub-4.7.2}"          # phải cùng phiên bản với firmware trên Pixhawk 6C
 ARDUPILOT_DIR="${ARDUPILOT_DIR:-$HOME/ardupilot}"
 ARDUPILOT_GAZEBO_DIR="${ARDUPILOT_GAZEBO_DIR:-$HOME/ardupilot_gazebo}"
 ARDUPILOT_GAZEBO_REF="${ARDUPILOT_GAZEBO_REF:-main}"
@@ -158,6 +158,6 @@ else
 fi
 
 log "XONG. Mở terminal WSL mới rồi:"
-echo "    bash scripts/run_sim.sh          # chạy simulation"
+echo "    bash scripts/run_sim.sh          # chạy sim"
 echo "    bash scripts/keyboard.sh         # lái bằng bàn phím (terminal khác)"
-echo "    bash scripts/check_sim.sh        # tự kiểm tra 9 mốc nghiệm thu"
+echo "    bash scripts/check_sim.sh        # kiểm tra tự động 9 mục"

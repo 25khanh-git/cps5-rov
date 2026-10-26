@@ -1,10 +1,10 @@
 """teleop_node: tay cầm (/joy) -> /mavros/rc/override cho ArduSub.
 
-- Gửi RC override LIÊN TỤC ở rate_hz (kể cả khi đứng yên = 1500), vì ArduSub
+- Gửi RC override liên tục ở rate_hz (kể cả khi đứng yên = 1500), vì ArduSub
   coi việc ngừng nhận lệnh quá FS_PILOT_TIMEOUT là mất điều khiển (failsafe).
 - Không có /joy mới trong joy_timeout giây -> gửi trung tính.
 - Nút: ARM / DISARM / đổi chế độ MANUAL, STABILIZE, ALT_HOLD / tăng giảm gain.
-- Phát /rov/topside_heartbeat để safety_node (chạy trên Pi) biết máy điều khiển còn sống.
+- Phát /rov/topside_heartbeat để safety_node biết laptop điều khiển vẫn hoạt động.
 """
 
 from __future__ import annotations

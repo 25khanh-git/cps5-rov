@@ -1,8 +1,8 @@
 """Sinh file world SDF (bể nước + robot CPS 5) cho Gazebo Harmonic.
 
 Robot được nhúng thẳng vào world (không spawn riêng) nên chỉ cần một lệnh
-`gz sim <world>` là có đủ. File được sinh lại mỗi lần chạy simulation, vì vậy
-sửa YAML là đủ — không bao giờ sửa file .sdf sinh ra.
+`gz sim <world>` là có đủ. File được sinh lại mỗi lần chạy sim, vì vậy
+chỉ cần sửa YAML — không sửa file .sdf sinh ra.
 """
 
 from __future__ import annotations

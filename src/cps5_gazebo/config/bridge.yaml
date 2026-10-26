@@ -1,5 +1,5 @@
-# ros_gz_bridge: các topic Gazebo -> ROS 2 cần cho simulation.
-# (Lệnh thruster KHÔNG đi qua ROS: ArduSub SITL <-> ArduPilotPlugin nói chuyện trực tiếp.)
+# ros_gz_bridge: các topic Gazebo -> ROS 2 dùng trong sim.
+# Lệnh thruster không đi qua ROS: ArduSub SITL và ArduPilotPlugin trao đổi trực tiếp qua UDP.
 
 - ros_topic_name: /camera/image_raw
   gz_topic_name: /cps5/camera/image

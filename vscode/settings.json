@@ -1,5 +1,5 @@
 {
-  // ---- Bắt buộc: script bash phải dùng xuống dòng LF (CRLF làm WSL báo lỗi "\r") ----
+  // ---- Bắt buộc: dùng xuống dòng LF. Script bash có CRLF sẽ lỗi "\r" trong WSL ----
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,

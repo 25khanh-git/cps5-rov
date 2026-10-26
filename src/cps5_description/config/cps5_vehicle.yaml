@@ -1,25 +1,28 @@
 # =============================================================================
-# CPS 5 — TOÀN BỘ THÔNG SỐ VẬT LÝ CỦA ROBOT (đơn vị SI: m, kg, N, s, rad)
+# CPS5 — Thông số vật lý của robot dùng cho sim (đơn vị SI: m, kg, N, s, rad)
 #
-# Đây là file DUY NHẤT bạn cần sửa khi có số đo thật.
-# Sau khi sửa: chạy lại simulation (file SDF được sinh lại tự động mỗi lần chạy).
+# Mọi thông số vật lý của sim chỉ nằm trong file này. Khi có số đo thật, sửa ở đây
+# và cập nhật bảng "Trạng thái số liệu" trong README.
+# Sau khi sửa: chạy lại sim (file SDF được sinh lại tự động mỗi lần chạy).
 # Xem nhanh các con số suy ra (thể tích, lực nổi...):  bash scripts/generate_sdf.sh
 #
-# Hệ trục của model (giống Gazebo / ROS REP-103): x = tiến, y = trái, z = lên.
+# Hệ trục robot (chuẩn ROS REP-103): x = hướng mũi, y = sang trái, z = lên.
 # Gốc tọa độ base_link = tâm của hộp nổi (tâm nổi).
 # =============================================================================
 
 vehicle:
   name: cps5
-  # Tổng khối lượng (kg) — ước lượng từ BOM ~2.1 kg. CÂN THẬT RỒI SỬA.
-  mass: 2.10
+  # Tổng khối lượng (kg). Giá trị tạm: 7 kg (riêng 8 x T200 đã ~2.8 kg). Cần cân robot thật.
+  mass: 7.0
   # Lực nổi lớn hơn trọng lượng bao nhiêu phần (0.015 = 1.5 %).
   # Dương => robot tự nổi khi thả tay (an toàn). Âm => robot chìm.
   buoyancy_margin: 0.015
-  # Tâm nổi cao hơn trọng tâm (m). Càng lớn robot càng tự cân bằng roll/pitch tốt.
-  cob_above_com: 0.015
-  # Mô-men quán tính quanh trọng tâm (kg·m²) — xấp xỉ hình trụ r≈6 cm, dài≈35 cm.
-  inertia: {ixx: 0.0040, iyy: 0.0233, izz: 0.0233}
+  # Khoảng cách tâm nổi cao hơn trọng tâm (m). Ống kín (nổi) ở trên, thruster + khung (nặng) ở dưới.
+  # Giá trị ước lượng; cần đo lại khi thử robot trong nước.
+  cob_above_com: 0.020
+  # Mô-men quán tính quanh trọng tâm (kg·m²). Ước lượng: xấp xỉ hình hộp 0.45 x 0.40 x 0.15 m,
+  # nhân hệ số 0.6 vì khối lượng tập trung ở giữa (ống + pin).
+  inertia: {ixx: 0.065, iyy: 0.080, izz: 0.130}
   # Vị trí thả robot trong thế giới (z = 0 là mặt nước, âm là dưới nước).
   # Thả sát mặt nước để ArduSub hiệu chuẩn cảm biến độ sâu ở mức ~0 m khi khởi động.
   spawn: {x: 0.0, y: 0.0, z: -0.05, yaw: 0.0}
@@ -28,61 +31,68 @@ water:
   # Nước ngọt ~997 kg/m³; nước biển ~1025 kg/m³.
   density: 997.0
 
-# Hộp va chạm dùng để TÍNH LỰC NỔI. Plugin Buoyancy của Gazebo tính lực nổi theo
+# Hộp va chạm (collision) dùng để tính lực nổi. Plugin Buoyancy của Gazebo tính lực nổi theo
 # thể tích collision, nên chiều cao hộp được sinh tự động sao cho:
 #   thể tích = mass * (1 + buoyancy_margin) / density
 hull:
-  length: 0.30   # m, theo trục x
-  width: 0.12    # m, theo trục y
+  length: 0.40   # m, theo trục x (khung trong CAD, không tính nozzle)
+  width: 0.30    # m, theo trục y
 
 # Chỉ dùng để hiển thị (không ảnh hưởng vật lý).
 visual:
   tube_radius: 0.040    # ống acrylic 80 mm
-  tube_length: 0.25     # dài 250 mm
+  tube_length: 0.30     # dài ~300 mm
 
-# Khối lượng nước kèm (added mass), kg và kg·m², giá trị DƯƠNG.
+# Khối lượng nước kèm (added mass), đơn vị kg và kg·m², luôn là số dương.
 # Khai báo bằng <fluid_added_mass> của SDF (ổn định số với DART trên Gazebo Harmonic).
-# Ước lượng: trụ dài -> theo y,z ≈ ρ·π·r²·L ≈ 1.9 kg; theo x ≈ 10 % khối lượng chiếm chỗ.
+# Giá trị ước lượng, lấy theo mô hình BlueROV2 Heavy (cùng cỡ, 8 thruster) trong ardupilot_gazebo.
+# Hướng z lớn nhất vì mặt trên/dưới của robot rộng nhất.
 added_mass:
   enabled: true
-  xx: 0.20
-  yy: 1.90
-  zz: 1.90
-  pp: 0.001
-  qq: 0.015
-  rr: 0.015
+  xx: 1.70
+  yy: 2.50
+  zz: 5.50
+  pp: 0.02
+  qq: 0.05
+  rr: 0.05
 
-# Hệ số cản thủy động (Fossen), giá trị ÂM. Lực cản = linear*v + quadratic*v*|v|.
-# Bậc hai ≈ -0.5·ρ·Cd·A. Đây là ước lượng — chỉnh lại bằng dữ liệu ros2 bag ở bể bơi.
+# Hệ số cản thủy động (mô hình Fossen), luôn là số âm. Lực cản = linear*v + quadratic*v*|v|.
+# Giá trị lấy theo BlueROV2 Heavy của ardupilot_gazebo. Có thể hiệu chỉnh từ dữ liệu ros2 bag ghi ở bể bơi.
 drag:
-  linear:    {x: -1.0, y: -2.0, z: -2.0, k: -0.05, m: -0.10, n: -0.10}
-  quadratic: {x: -5.0, y: -15.0, z: -24.0, k: -0.02, m: -0.10, n: -0.10}
+  linear:    {x: -4.0, y: -6.2, z: -5.2, k: -0.07, m: -0.07, n: -0.07}
+  quadratic: {x: -18.2, y: -21.7, z: -37.0, k: -1.55, m: -1.55, n: -1.55}
 
 thrusters:
-  # Lực đẩy tối đa mỗi thruster (N) ở PWM 1100 / 1900. CHƯA ĐO — đo bằng cân treo.
-  max_thrust: 5.0
-  propeller_diameter: 0.07   # m (chỉ để tính tốc độ quay cánh)
+  # Blue Robotics T200 ở pin 3S (~12 V): ~36 N chiều thuận, ~28 N chiều ngược.
+  # Plugin chỉ nhận một giá trị cho cả hai chiều nên lấy ~30 N. Cần đo lại bằng cân treo.
+  max_thrust: 30.0
+  propeller_diameter: 0.076  # m (T200)
   thrust_coefficient: 0.02   # chỉ để tính tốc độ quay cánh
   prop_mass: 0.005           # kg mỗi cánh (được trừ ra khỏi khối lượng thân)
-  # THỨ TỰ DANH SÁCH = SERVO1..5 của ArduSub, frame SimpleROV-5 (FRAME_CONFIG = 6).
-  # Kiểm tra từ source ArduSub (AP_Motors6DOF.cpp, Sub-4.7.2):
-  #   M1: yaw -1, forward +1  -> thruster ngang bên PHẢI
-  #   M2: yaw +1, forward +1  -> thruster ngang bên TRÁI
-  #   M3: roll +1, throttle -1 -> thruster đứng bên PHẢI (PWM dương đẩy XUỐNG)
-  #   M4: roll -1, throttle -1 -> thruster đứng bên TRÁI (PWM dương đẩy XUỐNG)
-  #   M5: lateral +1          -> thruster ngang hông (PWM dương đẩy sang PHẢI)
-  # axis = hướng lực khi PWM > 1500, trong hệ trục model (x tiến, y trái, z lên).
+  # Thứ tự trong danh sách = SERVO1..8 của ArduSub (frame Vectored-6DOF, FRAME_CONFIG = 2).
+  # Đổi thứ tự sẽ làm sai motor; unit test test_model.py kiểm tra điều này.
+  # Hệ số từ source ArduSub (AP_Motors6DOF.cpp, Sub-4.7.2), (roll, pitch, yaw, throttle, forward, lateral):
+  #   M1 ( 0, 0, 1, 0,-1, 1) ngang, trước-phải   M5 ( 1,-1, 0,-1, 0, 0) đứng, trước-phải
+  #   M2 ( 0, 0,-1, 0,-1,-1) ngang, trước-trái   M6 (-1,-1, 0,-1, 0, 0) đứng, trước-trái
+  #   M3 ( 0, 0,-1, 0, 1, 1) ngang, sau-phải     M7 ( 1, 1, 0,-1, 0, 0) đứng, sau-phải
+  #   M4 ( 0, 0, 1, 0, 1,-1) ngang, sau-trái     M8 (-1, 1, 0,-1, 0, 0) đứng, sau-trái
+  # Vị trí lấy từ CAD Onshape "one tube 8 thruster layout assembly" (tâm khung làm gốc).
+  # Đổi trục CAD -> robot: x = +Z_cad (mũi), y = -X_cad (trái), z = -Y_cad (lên).
+  # axis = hướng lực khi PWM > 1500, trong hệ trục robot.
   # spin = chiều quay cánh (±1), chỉ để cân mô-men phản lực giữa các cánh.
   list:
-    - {name: thruster1, xyz: [-0.12, -0.08, -0.015], axis: [1, 0, 0],  spin: 1}
-    - {name: thruster2, xyz: [-0.12,  0.08, -0.015], axis: [1, 0, 0],  spin: -1}
-    - {name: thruster3, xyz: [ 0.00, -0.09,  0.000], axis: [0, 0, -1], spin: 1}
-    - {name: thruster4, xyz: [ 0.00,  0.09,  0.000], axis: [0, 0, -1], spin: -1}
-    - {name: thruster5, xyz: [ 0.00,  0.00, -0.015], axis: [0, -1, 0], spin: 1}
+    - {name: thruster1, xyz: [ 0.188, -0.155, -0.040], axis: [-0.7071068, -0.7071068, 0], spin: 1}   # CAD T200 <8>
+    - {name: thruster2, xyz: [ 0.188,  0.155, -0.040], axis: [-0.7071068,  0.7071068, 0], spin: -1}  # CAD T200 <5>
+    - {name: thruster3, xyz: [-0.188, -0.155, -0.040], axis: [ 0.7071068, -0.7071068, 0], spin: -1}  # CAD T200 <7>
+    - {name: thruster4, xyz: [-0.188,  0.155, -0.040], axis: [ 0.7071068,  0.7071068, 0], spin: 1}   # CAD T200 <6>
+    - {name: thruster5, xyz: [ 0.0685, -0.091, -0.045], axis: [0, 0, -1], spin: 1}                    # CAD T200 <1>
+    - {name: thruster6, xyz: [ 0.0685,  0.091, -0.045], axis: [0, 0, -1], spin: -1}                   # CAD T200 <4>
+    - {name: thruster7, xyz: [-0.0685, -0.091, -0.045], axis: [0, 0, -1], spin: -1}                   # CAD T200 <2>
+    - {name: thruster8, xyz: [-0.0685,  0.091, -0.045], axis: [0, 0, -1], spin: 1}                    # CAD T200 <3>
 
 camera:
   enabled: true
-  xyz: [0.16, 0.0, 0.0]   # sau vòm acrylic phía trước
+  xyz: [0.17, 0.0, 0.0]   # sau vòm acrylic phía trước (camera mount trong CAD)
   hfov: 1.57              # rad (~90°)
   width: 640
   height: 480

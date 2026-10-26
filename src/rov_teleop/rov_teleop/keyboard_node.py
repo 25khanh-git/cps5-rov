@@ -1,9 +1,9 @@
 """keyboard_teleop: dùng bàn phím thay tay cầm (tiện trong WSL, nơi tay cầm USB khó dùng).
 
-Node này KHÔNG gửi lệnh trực tiếp cho ArduSub. Nó phát /joy giả lập đúng bố cục tay cầm
+Node này không gửi lệnh trực tiếp cho ArduSub. Nó phát /joy giả lập đúng bố cục tay cầm
 mặc định trong teleop.yaml, nên teleop_node xử lý y hệt như tay cầm thật.
 
-GIỮ phím thì robot chạy, NHẢ phím thì dừng (sau ~0.6 s). Biên độ chỉnh bằng [ / ] (gain).
+Giữ phím thì robot chạy, nhả phím thì dừng (sau ~0.6 s). Biên độ chỉnh bằng [ / ] (gain).
 Dòng trạng thái hiển thị ARM / mode / độ sâu / hướng la bàn, cập nhật liên tục.
 Phải chạy trong terminal riêng:  ros2 run rov_teleop keyboard_teleop
 """
@@ -37,7 +37,7 @@ CPS 5 — điều khiển bằng bàn phím: GIỮ phím để chạy, NHẢ ra 
   m : MANUAL   t : STABILIZE (giữ thăng bằng)   h : ALT_HOLD (giữ độ sâu — dễ lái nhất)
   [ / ] : giảm / tăng lực (gain)     Ctrl-C : thoát
 CAMERA: j / l : xoay quanh robot   i / k : nhìn cao / thấp   c : về sau đuôi
-Mẹo: ARM rồi nhấn h (ALT_HOLD) — robot tự giữ độ sâu, bạn chỉ cần lái tiến/quay.
+Mẹo: ARM rồi nhấn h (ALT_HOLD) — robot tự giữ độ sâu, chỉ cần lái tiến/quay.
 """
 
 STATE_QOS = QoSProfile(depth=10, reliability=ReliabilityPolicy.RELIABLE,
@@ -78,7 +78,7 @@ class KeyboardTeleop(Node):
         self.depth = -m.data
 
     def _on_rcout(self, m: RCOut) -> None:
-        self.servo = list(m.channels[:5])
+        self.servo = list(m.channels[:8])   # Vectored-6DOF: 8 thruster
 
     def on_move_key(self) -> None:
         """Gọi khi nhấn phím di chuyển: nhắc nếu robot chưa sẵn sàng."""
@@ -115,7 +115,7 @@ class KeyboardTeleop(Node):
         depth = f'{self.depth:5.2f} m' if self.depth is not None else '  ?  '
         head = f'{self.heading:5.1f}°' if self.heading is not None else '  ?  '
         lenh = ' + '.join(moves) if moves else 'đứng yên'
-        # PWM thực tế ArduSub gửi tới 5 thruster (1500 = không đẩy)
+        # PWM thực tế ArduSub gửi tới 8 thruster (1500 = không đẩy)
         if self.servo:
             pwm = 'PWM ' + ' '.join(str(v) for v in self.servo)
         else:

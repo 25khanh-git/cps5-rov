@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Tự động: bật simulation (không cửa sổ, không teleop) -> chạy check_sim -> tắt simulation.
+# Kiểm tra tự động: bật sim (không cửa sổ, không teleop) -> chạy check_sim -> tắt sim.
 #   bash scripts/check_sim.sh            # headless
 #   bash scripts/check_sim.sh gui:=true  # xem robot chạy test
 # Kết quả chi tiết của sim: ~/.cps5/check_sim_launch.log

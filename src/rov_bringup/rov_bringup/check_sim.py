@@ -1,6 +1,6 @@
-"""check_sim: tự kiểm tra simulation theo các mốc nghiệm thu.
+"""check_sim: kiểm tra tự động sim theo 9 mục (bảng ở README mục 6).
 
-Cần simulation đang chạy với teleop TẮT (script này tự gửi lệnh lái):
+Cần sim đang chạy với teleop tắt (script này tự gửi lệnh lái):
     ros2 launch rov_bringup sim.launch.py teleop:=false
     ros2 run rov_bringup check_sim
 Hoặc gọn hơn: bash scripts/check_sim.sh (tự bật sim không cửa sổ, chạy kiểm tra, tắt sim).
@@ -242,7 +242,7 @@ def run(node: SimCheck) -> Checker:
         return c
     time.sleep(1.0)
 
-    # 4a. Lặn: throttle 1300 -> thruster 3,4 đẩy xuống -----------------------------------
+    # 4a. Lặn: throttle 1300 -> 4 thruster đứng (M5-M8) đẩy xuống ------------------------
     # (bể sâu 3 m: các bước sau dùng throttle 1500 để robot nổi chậm, không chạm đáy)
     p0 = node.snapshot()
     hold(node, 4.0, throttle=1300)
@@ -251,7 +251,7 @@ def run(node: SimCheck) -> Checker:
     c.add('4a. Lặn (throttle 1300, 4 s)', dz < -0.5,
           f'độ sâu thay đổi {dz:+.2f} m (cần < -0.50), roll {deg(p1.roll):+.1f}°')
 
-    # 4b. Tiến: thruster 1,2 cùng đẩy về trước ------------------------------------------
+    # 4b. Tiến: 4 thruster ngang xéo (M1-M4) cộng lực về trước --------------------------
     p0 = node.snapshot()
     hold(node, 3.0, forward=1650)
     p1 = node.snapshot()
@@ -259,7 +259,7 @@ def run(node: SimCheck) -> Checker:
     c.add('4b. Tiến (forward 1650, 3 s)', fwd > 0.3 and abs(right) < fwd,
           f'tiến {fwd:+.2f} m, lệch ngang {right:+.2f} m (cần tiến > 0.30)')
 
-    # 4c. Quay phải: thruster 2 đẩy tới, thruster 1 đẩy lùi -> yaw ENU giảm --------------
+    # 4c. Quay phải: M1, M4 đẩy dương, M2, M3 đẩy âm -> yaw ENU giảm -------------------
     time.sleep(1.5)   # chờ robot dừng trôi
     y0 = node.yaw_total()
     hold(node, 2.0, yaw=1600)
@@ -268,7 +268,7 @@ def run(node: SimCheck) -> Checker:
     c.add('4c. Quay phải (yaw 1600, 2 s)', dyaw < -math.radians(20),
           f'yaw thay đổi {deg(dyaw):+.0f}° (quay phải = âm trong ENU, cần < -20°)')
 
-    # 4d. Sang phải: thruster 5 ---------------------------------------------------------
+    # 4d. Sang phải: 4 thruster ngang xéo (M1-M4) cộng lực sang phải -------------------
     time.sleep(1.5)
     p0 = node.snapshot()
     hold(node, 3.0, lateral=1700)

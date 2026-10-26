@@ -4,7 +4,7 @@
 
 CPS5_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export CPS5_ROOT
-# Build/install đặt trong ổ Linux của WSL (nhanh hơn nhiều so với /mnt/d), mã nguồn vẫn ở D:
+# Build/install đặt trong ổ Linux của WSL (nhanh hơn nhiều so với ổ Windows /mnt/...); mã nguồn vẫn ở thư mục repo.
 export CPS5_WS="${CPS5_WS:-$HOME/.cps5/ws}"
 export ARDUPILOT_DIR="${ARDUPILOT_DIR:-$HOME/ardupilot}"
 export ARDUPILOT_GAZEBO_DIR="${ARDUPILOT_GAZEBO_DIR:-$HOME/ardupilot_gazebo}"

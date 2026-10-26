@@ -2,7 +2,7 @@
 
 SafetyMonitor nhận các quan sát (thời gian, trạng thái ArduSub, pin, độ sâu,
 heartbeat của máy điều khiển) và trả về danh sách hành động cần làm.
-Lớp này là lớp bảo vệ THỨ HAI: failsafe chính nằm trong ArduSub
+Đây là lớp bảo vệ thứ hai: failsafe chính nằm trong ArduSub
 (FS_PILOT_INPUT, FS_GCS_ENABLE, BATT_FS_*), chạy ngay trên Pixhawk.
 """
 

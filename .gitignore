@@ -1,4 +1,4 @@
-# colcon (nếu lỡ build trong thư mục dự án)
+# colcon (phòng trường hợp build ngay trong thư mục repo)
 build/
 install/
 log/
@@ -9,3 +9,4 @@ __pycache__/
 .pytest_cache/
 # SDF sinh tự động (nằm ở ~/.cps5/generated, phòng khi ghi vào đây)
 generated/
+*.log

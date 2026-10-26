@@ -22,6 +22,7 @@ from typing import Any, Dict, List
 import yaml
 
 GRAVITY = 9.80665
+NUM_THRUSTERS = 8   # frame Vectored-6DOF (FRAME_CONFIG = 2)
 PWM_MIN = 1100
 PWM_MAX = 1900
 
@@ -71,8 +72,8 @@ def validate(p: Dict[str, Any]) -> None:
         errors.append('vehicle.buoyancy_margin nên nằm trong [-0.2, 0.3]')
     if p['water']['density'] < 900 or p['water']['density'] > 1100:
         errors.append('water.density phải khoảng 997 (nước ngọt) – 1025 (nước biển)')
-    if len(th['list']) != 5:
-        errors.append('SimpleROV-5 cần đúng 5 thruster (thrusters.list)')
+    if len(th['list']) != NUM_THRUSTERS:
+        errors.append(f'Vectored-6DOF cần đúng {NUM_THRUSTERS} thruster (thrusters.list)')
     if th['max_thrust'] <= 0:
         errors.append('thrusters.max_thrust phải > 0')
     if v['mass'] - th['prop_mass'] * len(th['list']) <= 0:
@@ -115,7 +116,8 @@ def summary(p: Dict[str, Any]) -> str:
     d = derive(p)
     lines = [
         'CPS 5 — các đại lượng suy ra từ YAML',
-        f'  Tổng khối lượng          : {d.total_mass:.3f} kg (thân {d.base_mass:.3f} kg + 5 cánh)',
+        f'  Tổng khối lượng          : {d.total_mass:.3f} kg (thân {d.base_mass:.3f} kg'
+        f' + {len(p["thrusters"]["list"])} cánh)',
         f'  Thể tích chiếm chỗ       : {d.displaced_volume * 1000:.3f} L',
         f'  Hộp nổi (L x W x H)      : {p["hull"]["length"]:.3f} x {p["hull"]["width"]:.3f}'
         f' x {d.hull_height:.4f} m',
@@ -146,13 +148,15 @@ def _vec(v) -> str:
 
 
 def _axis_rpy(axis) -> str:
-    """Hướng một hình trụ (mặc định dọc z) theo trục thruster — chỉ để hiển thị."""
-    ax, ay, _ = (abs(float(c)) for c in axis)
-    if ax > 0.5:
-        return f'0 {_f(math.pi / 2)} 0'
-    if ay > 0.5:
-        return f'{_f(math.pi / 2)} 0 0'
-    return '0 0 0'
+    """Hướng một hình trụ (mặc định dọc z) theo trục thruster — chỉ để hiển thị.
+
+    Xoay pitch quanh y rồi yaw quanh z: trục z -> (sinP·cosY, sinP·sinY, cosP).
+    Dùng được cho cả thruster xéo 45° của Vectored-6DOF.
+    """
+    ax, ay, az = (float(c) for c in axis)
+    pitch = math.atan2(math.hypot(ax, ay), az)
+    yaw = math.atan2(ay, ax) if math.hypot(ax, ay) > 1e-9 else 0.0
+    return f'0 {_f(pitch)} {_f(yaw)}'
 
 
 def _material(r: float, g: float, b: float) -> str:
@@ -222,7 +226,7 @@ def model_sdf(p: Dict[str, Any]) -> str:
         f'''
       <visual name="{t['name']}_shroud">
         <pose>{_vec(t['xyz'])} {_axis_rpy(t['axis'])}</pose>
-        <geometry><cylinder><radius>0.022</radius><length>0.035</length></cylinder></geometry>
+        <geometry><cylinder><radius>{_f(th['propeller_diameter'] / 2 + 0.008)}</radius><length>0.06</length></cylinder></geometry>
         {_material(0.1, 0.1, 0.1)}
       </visual>'''
         for t in th['list']

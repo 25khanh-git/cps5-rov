@@ -1,5 +1,5 @@
-# Ánh xạ tay cầm -> kênh RC của ArduSub. Quy ước joy của ROS: cần đẩy LÊN / sang TRÁI = +1.
-# Kiểm tra tay cầm của bạn bằng:  ros2 topic echo /joy   rồi sửa index/sign bên dưới.
+# Ánh xạ tay cầm -> kênh RC của ArduSub. Quy ước joy của ROS: cần đẩy lên / sang trái = +1.
+# Với tay cầm khác loại: chạy  ros2 topic echo /joy , xem trục/nút nào thay đổi, rồi sửa index/sign bên dưới.
 # keyboard_teleop phát /joy theo đúng bố cục mặc định này.
 teleop_node:
   ros__parameters:

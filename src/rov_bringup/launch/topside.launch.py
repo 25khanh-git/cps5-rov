@@ -1,4 +1,4 @@
-"""Chạy trên LAPTOP khi lái robot thật: tay cầm (joy_node) + teleop_node.
+"""Chạy trên laptop điều khiển khi lái robot thật: tay cầm (joy_node) + teleop_node.
 
   ros2 launch rov_bringup topside.launch.py
 Không có tay cầm: topside.launch.py joy:=false rồi ở terminal khác: ros2 run rov_teleop keyboard_teleop

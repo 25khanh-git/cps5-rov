@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sinh lại SDF và in các đại lượng suy ra (thể tích, lực nổi...) — KHÔNG cần build, KHÔNG cần ROS.
+# Sinh lại SDF và in các đại lượng suy ra (thể tích, lực nổi...) — không cần build, không cần ROS.
 # Dùng sau khi sửa src/cps5_description/config/cps5_vehicle.yaml.
 set -eo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

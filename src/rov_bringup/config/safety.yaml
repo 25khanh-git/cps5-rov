@@ -1,8 +1,9 @@
 safety_node:
   ros__parameters:
-    # Mất heartbeat từ máy điều khiển (teleop_node) quá lâu khi đang ARM -> disarm.
+    # Mất heartbeat từ laptop điều khiển (teleop_node) quá lâu khi đang ARM -> DISARM.
     heartbeat_timeout: 3.0        # s
-    # Pin 3S Li-ion: dưới warn -> cảnh báo; dưới critical liên tục critical_hold giây -> SURFACE.
+    # Pin 3S: dưới battery_warn -> cảnh báo; dưới battery_critical liên tục critical_hold giây -> SURFACE.
+    # Giữ khớp với BATT_LOW_VOLT / BATT_CRT_VOLT trong cps5.parm.
     battery_warn: 10.5            # V
     battery_critical: 9.9         # V
     critical_hold: 3.0            # s

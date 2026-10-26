@@ -38,7 +38,7 @@ if pgrep -f "$BIN" >/dev/null 2>&1; then
   pkill -9 -f "$BIN" 2>/dev/null || true
 fi
 
-# Tham số CHỈ cho SITL (SIM_*), không có trên Pixhawk nên không để trong cps5.parm.
+# Tham số chỉ dành cho SITL (SIM_*), không có trên Pixhawk nên không để trong cps5.parm.
 # SIM_RC_FAIL 1: tắt bộ thu RC giả lập của SITL. Robot thật không có bộ thu RC, chỉ có
 # RC override từ MAVROS; nếu để bộ thu giả, khi override dừng ArduSub quay về RC giả
 # (1500) và failsafe mất lệnh lái (FS_PILOT_INPUT) không bao giờ kích hoạt.

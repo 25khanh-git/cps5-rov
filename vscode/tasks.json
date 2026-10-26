@@ -154,7 +154,7 @@
     },
     {
       "label": "CPS5: 4. Lái bằng bàn phím",
-      "detail": "Chạy khi simulation đang chạy",
+      "detail": "Chạy khi sim đang chạy",
       "type": "process",
       "command": "bash",
       "args": [
@@ -183,7 +183,7 @@
     },
     {
       "label": "CPS5: 5. Tự kiểm tra simulation",
-      "detail": "9 mốc nghiệm thu",
+      "detail": "9 mục kiểm tra tự động",
       "type": "process",
       "command": "bash",
       "args": [

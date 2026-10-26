@@ -1,4 +1,4 @@
-"""safety_node: lớp an toàn thứ hai, chạy cạnh MAVROS (trên Raspberry Pi khi chạy thật).
+"""safety_node: lớp an toàn thứ hai, chạy cùng nơi với MAVROS (laptop hoặc Pi khi chạy thật).
 
 Theo dõi:
   * /rov/topside_heartbeat (từ teleop_node trên laptop) — mất quá heartbeat_timeout khi ARM -> DISARM
@@ -58,8 +58,8 @@ class SafetyNode(Node):
 
     @staticmethod
     def _now() -> float:
-        # Đồng hồ ĐƠN ĐIỆU: không bao giờ nhảy. Đồng hồ hệ thống (ROS clock) có thể nhảy cóc
-        # khi WSL2 / NTP đồng bộ giờ, làm tưởng nhầm là mất heartbeat -> disarm oan.
+        # Dùng đồng hồ đơn điệu (monotonic): không bao giờ nhảy. Đồng hồ hệ thống (ROS clock)
+        # có thể nhảy khi WSL2 / NTP đồng bộ giờ, khiến node tưởng mất heartbeat và DISARM nhầm.
         return time.monotonic()
 
     def _on_state(self, m: State) -> None:

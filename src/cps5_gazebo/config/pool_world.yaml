@@ -14,7 +14,7 @@ pool:
   depth: 3.0              # m
   wall_thickness: 0.1
 
-# Vật thể màu để sau này thử thị giác máy tính (camera).
+# Vật thể có màu, dùng để thử nhận diện bằng camera.
 objects:
   buoy:      {type: sphere, radius: 0.15, xyz: [-3.0,  1.5, -1.0], color: [1.0, 0.45, 0.0]}
   red_box:   {type: box, size: [0.3, 0.3, 0.3], xyz: [-2.0, -1.5, -2.85], color: [0.9, 0.1, 0.1]}

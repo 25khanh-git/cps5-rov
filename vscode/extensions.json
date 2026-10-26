@@ -1,5 +1,5 @@
 {
-  // Mở thư mục này TRONG WSL (Remote - WSL) để IntelliSense thấy thư viện ROS 2.
+  // Mở repo trong WSL (extension Remote - WSL) để IntelliSense tìm thấy thư viện ROS 2.
   "recommendations": [
     "ms-vscode-remote.remote-wsl",
     "ms-python.python",
